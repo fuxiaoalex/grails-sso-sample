@@ -16,6 +16,7 @@ import org.springframework.security.saml.SAMLBootstrap
 import org.springframework.security.saml.SAMLEntryPoint
 import org.springframework.security.saml.SAMLProcessingFilter
 import org.springframework.security.saml.SAMLLogoutFilter
+import org.springframework.security.saml.SAMLDiscovery
 import org.springframework.security.saml.SAMLLogoutProcessingFilter
 import org.springframework.security.saml.websso.WebSSOProfileOptions
 import org.springframework.security.saml.websso.WebSSOProfileConsumerImpl
@@ -88,13 +89,9 @@ beans = {
 	keyManager(JKSKeyManager,
 		conf.saml.keyManager.storeFile, conf.saml.keyManager.storePass, conf.saml.keyManager.passwords, conf.saml.keyManager.defaultKey)
 	
-	def idpSelectionPath = conf.saml.entryPoint.idpSelectionPath
 	samlEntryPoint(SAMLEntryPoint) {
 		println "Entry point process url is ${conf.saml.loginFormUrl}"
 		filterProcessesUrl = conf.saml.loginFormUrl 						// '/saml/login'
-		if (idpSelectionPath) {
-			idpSelectionPath = idpSelectionPath 					// '/index.gsp'
-		}
 		defaultProfileOptions = ref('webProfileOptions')
 	}
 	
@@ -110,19 +107,54 @@ beans = {
 //	metadataGenerator(MetadataGenerator)
 		
 	log.debug "Dynamically defining bean metadata providers... "
+	def idpResource
 	def idpFile = conf.saml.metadata.idp.file
 	
 	if(idpFile){
-		def idpResource = new ClassPathResource(idpFile)	
+		idpResource = new ClassPathResource(idpFile)	
 		idpMetadata(ExtendedMetadataDelegate) { extMetaDataDelegateBean ->
 			idpMetadataProvider(FilesystemMetadataProvider) { bean ->
 				bean.constructorArgs = [idpResource.getFile()]
 				parserPool = ref('parserPool')
 			}
+
+			extMetaDataDelegateBean.constructorArgs = [ref('idpMetadataProvider')]
 			
-			extMetaDataDelegateBean.constructorArgs = [ref('idpMetadataProvider'), new ExtendedMetadata()]
 		}
 	}
+	
+	def idp2File = conf.saml.metadata.idp2.file
+	
+	if(idp2File){
+		idpResource = new ClassPathResource(idp2File)
+		idp2Metadata(ExtendedMetadataDelegate) { extMetaDataDelegateBean ->
+			idp2MetadataProvider(FilesystemMetadataProvider) { bean ->
+				bean.constructorArgs = [idpResource.getFile()]
+				parserPool = ref('parserPool')
+			}
+			extMetaDataDelegateBean.constructorArgs = [ref('idp2MetadataProvider')]
+		}
+	}
+	
+	
+//	def providers = []
+//	log.debug "Dynamically defining bean metadata providers... "
+//	def providerBeanName = "extendedMetadataDelegate"
+//	conf.saml.metadata.providers.each {k,v ->
+//	
+//		println "Registering metadata key: ${k} and value: $v"
+//		"${k}"(ExtendedMetadataDelegate) { extMetaDataDelegateBean ->
+//		def resource = new ClassPathResource(v)
+//			filesystemMetadataProvider(FilesystemMetadataProvider) { bean ->
+//				bean.constructorArgs = [resource.getFile()]
+//				parserPool = ref('parserPool')
+//			}
+//			
+//			extMetaDataDelegateBean.constructorArgs = [ref('filesystemMetadataProvider'), new ExtendedMetadata()]
+//		}
+//		
+//		providers << ref(k)
+//	}
 	
 	def spFile = conf.saml.metadata.sp.file
 	if (spFile) {
@@ -132,12 +164,27 @@ beans = {
 				spMetadataProviderBean.constructorArgs = [spResource.getFile()]
 				parserPool = ref('parserPool')
 			}
-			spMetadataBean.constructorArgs = [ref('spMetadataProvider')]
-		}		
+			
+			def spDefaults = conf.saml.metadata.sp.defaults
+			spMetadataDefaults(ExtendedMetadata) { extMetadata ->
+				local = spDefaults.local
+				alias = spDefaults.alias
+				signingKey = spDefaults.signingKey
+				encryptionKey = spDefaults.encryptionKey
+				tlsKey = spDefaults.tlsKey
+				requireArtifactResolveSigned = spDefaults.requireArtifactResolveSigned
+				requireLogoutRequestSigned = spDefaults.requireLogoutRequestSigned
+				requireLogoutResponseSigned = spDefaults.requireLogoutResponseSigned
+				idpDiscoveryEnabled = spDefaults.idpDiscoveryEnabled
+			}
+			
+			spMetadataBean.constructorArgs = [ref('spMetadataProvider'), ref('spMetadataDefaults')]
+		}	
 	}
 
-	metadata(CachingMetadataManager,[ref('idpMetadata'), ref('spMetadata')]){
+	metadata(CachingMetadataManager,[ref('idpMetadata'), ref('idp2Metadata'), ref('spMetadata')]){
 		hostedSPName = conf.saml.metadata.sp?."alias"
+		defaultIDP = conf.saml.metadata.defaultIdp
 	}
 		
 	userDetailsService(SpringSamlUserDetailsService) {

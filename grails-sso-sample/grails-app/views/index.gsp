@@ -5,8 +5,7 @@
 		<title>Index</title>
 	</head>
 	<body>
-		<div style="margin-left: 20px;">
-		
+		<div style="margin-left: 20px;">	
 			<h1>Login/Logout</h1>
 			<sec:ifLoggedIn>
 			     Welcome back, <sec:username/> | <sec:logoutLink local="true">Local logout</sec:logoutLink> | <sec:logoutLink>Global logout</sec:logoutLink>
@@ -14,9 +13,8 @@
 			</sec:ifLoggedIn>
 				
 			<sec:ifNotLoggedIn>
-				<sec:loginLink>Login</sec:loginLink>
+				<sec:loginLink>Login (default IDP)</sec:loginLink> | <sec:loginLink selectIdp="true">Login (selecting IDP)</sec:loginLink> 			
 			</sec:ifNotLoggedIn>
-		
-		</div>		
+		</div>	
 	</body>
 </html>		

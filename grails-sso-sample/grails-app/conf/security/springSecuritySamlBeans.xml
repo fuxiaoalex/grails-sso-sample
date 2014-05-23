@@ -15,5 +15,9 @@
             </list>
         </constructor-arg>
     </bean>
+    
+    <bean id="samlIDPDiscovery" class="com.vmware.nee.saml.newSAMLDiscovery">
+        <property name="idpSelectionPath" value="/idpSelection"/>
+    </bean>
 
 </beans>

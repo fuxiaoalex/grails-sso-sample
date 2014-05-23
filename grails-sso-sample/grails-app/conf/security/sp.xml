@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
   <md:EntityDescriptor entityID="grails_saml_test" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata">
   <md:SPSSODescriptor AuthnRequestsSigned="false" WantAssertionsSigned="false" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+<md:Extensions>
+      <idpdisco:DiscoveryResponse xmlns:idpdisco="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="http://localhost:8080/grails-sso-sample/saml/login/alias/grails_saml_test?disco=true"/>
+    </md:Extensions>
 <md:KeyDescriptor use="signing">
       <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
         <ds:X509Data>
