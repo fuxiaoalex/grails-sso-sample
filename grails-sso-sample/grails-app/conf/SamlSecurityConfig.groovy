@@ -17,15 +17,11 @@ security {
 		metadata {
 			defaultIdp = 'http://idp.ssocircle.com'
 			url = '/saml/metadata'
+			//default idp info
 			idp{
 				file = 'security/idp.xml'
 				alias = 'http://idp.ssocircle.com'
 			}
-			idp2{
-				file = 'security/idp2.xml'
-				alias = 'https://openidp.feide.no'
-			}
-//			providers = [ssocircle: 'security/idp.xml', feide: 'security/idp2.xml']
 			sp {
 				file = 'security/sp.xml'
 				alias = 'grails_saml_test' 

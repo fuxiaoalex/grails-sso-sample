@@ -17,7 +17,7 @@
     </bean>
     
     <bean id="samlIDPDiscovery" class="com.vmware.nee.saml.newSAMLDiscovery">
-        <property name="idpSelectionPath" value="/idpSelection"/>
+        <property name="idpSelectionPath" value="/idp"/>
     </bean>
 
 </beans>

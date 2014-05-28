@@ -106,13 +106,13 @@ beans = {
 //	
 //	metadataGenerator(MetadataGenerator)
 		
-	log.debug "Dynamically defining bean metadata providers... "
+	log.debug "Defining the default idp metadata provider... "
 	def idpResource
 	def idpFile = conf.saml.metadata.idp.file
 	
 	if(idpFile){
 		idpResource = new ClassPathResource(idpFile)	
-		idpMetadata(ExtendedMetadataDelegate) { extMetaDataDelegateBean ->
+		defaultIdpMetadata(ExtendedMetadataDelegate) { extMetaDataDelegateBean ->
 			idpMetadataProvider(FilesystemMetadataProvider) { bean ->
 				bean.constructorArgs = [idpResource.getFile()]
 				parserPool = ref('parserPool')
@@ -122,39 +122,6 @@ beans = {
 			
 		}
 	}
-	
-	def idp2File = conf.saml.metadata.idp2.file
-	
-	if(idp2File){
-		idpResource = new ClassPathResource(idp2File)
-		idp2Metadata(ExtendedMetadataDelegate) { extMetaDataDelegateBean ->
-			idp2MetadataProvider(FilesystemMetadataProvider) { bean ->
-				bean.constructorArgs = [idpResource.getFile()]
-				parserPool = ref('parserPool')
-			}
-			extMetaDataDelegateBean.constructorArgs = [ref('idp2MetadataProvider')]
-		}
-	}
-	
-	
-//	def providers = []
-//	log.debug "Dynamically defining bean metadata providers... "
-//	def providerBeanName = "extendedMetadataDelegate"
-//	conf.saml.metadata.providers.each {k,v ->
-//	
-//		println "Registering metadata key: ${k} and value: $v"
-//		"${k}"(ExtendedMetadataDelegate) { extMetaDataDelegateBean ->
-//		def resource = new ClassPathResource(v)
-//			filesystemMetadataProvider(FilesystemMetadataProvider) { bean ->
-//				bean.constructorArgs = [resource.getFile()]
-//				parserPool = ref('parserPool')
-//			}
-//			
-//			extMetaDataDelegateBean.constructorArgs = [ref('filesystemMetadataProvider'), new ExtendedMetadata()]
-//		}
-//		
-//		providers << ref(k)
-//	}
 	
 	def spFile = conf.saml.metadata.sp.file
 	if (spFile) {
@@ -182,7 +149,7 @@ beans = {
 		}	
 	}
 
-	metadata(CachingMetadataManager,[ref('idpMetadata'), ref('idp2Metadata'), ref('spMetadata')]){
+	metadata(CachingMetadataManager,[ref('spMetadata'), ref('defaultIdpMetadata')]){
 		hostedSPName = conf.saml.metadata.sp?."alias"
 		defaultIDP = conf.saml.metadata.defaultIdp
 	}

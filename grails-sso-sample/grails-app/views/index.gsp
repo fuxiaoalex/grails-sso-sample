@@ -13,7 +13,7 @@
 			</sec:ifLoggedIn>
 				
 			<sec:ifNotLoggedIn>
-				<sec:loginLink>Login (default IDP)</sec:loginLink> | <sec:loginLink selectIdp="true">Login (selecting IDP)</sec:loginLink> 			
+				<sec:loginLink>Login (default IDP)</sec:loginLink> | <sec:loginLink selectIdp="true">Login (selecting IDP)</sec:loginLink> 	| <g:link controller="idp" action="list">Manage IDP</g:link>			
 			</sec:ifNotLoggedIn>
 		</div>	
 	</body>
