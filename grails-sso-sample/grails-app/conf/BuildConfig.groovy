@@ -59,7 +59,7 @@ grails.project.dependency.resolution = {
 			excludes 'commons-httpclient', 'log4j'
 		}
 
-		compile('org.opensaml:opensaml:2.5.3') {
+		compile('org.opensaml:opensaml:2.6.1') {
 			excludes 'commons-codec', 'commons-collections', 'commons-lang', 'esapi', 'jcip-annotations', 'jcl-over-slf4j', 'joda-time', 'jul-to-slf4j', 'junit', 'log4j-over-slf4j', 'logback-classic', 'openws', 'serializer', 'servlet-api', 'slf4j-api', 'spring-core', 'spring-mock', 'testng', 'velocity', 'xalan', 'xercesImpl', 'xml-apis', 'xml-resolver', 'xmlunit'
 		}
 
