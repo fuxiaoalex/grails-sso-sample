@@ -1,0 +1,25 @@
+/bank_files
+# build artifacts
+target/
+
+# external libraries
+libs/
+# project files
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings
+.link_to_grails_plugins/
+# local git configuration
+.gitattributes
+/classes/
+/target-eclipse/
+# license file that should not be part of the repository
+license.txt
+test-output
+nohup.out
+/.metadata
+/docs/

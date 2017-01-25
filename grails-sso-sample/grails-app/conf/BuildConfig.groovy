@@ -84,8 +84,12 @@ grails.project.dependency.resolution = {
 		compile('org.owasp.esapi:esapi:2.0.1') {
 			excludes 'antisamy', 'bsh-core', 'commons-beanutils-core', 'commons-collections', 'commons-configuration', 'commons-fileupload', 'commons-io', 'jsp-api', 'junit', 'log4j', 'servlet-api', 'xom'
 		}
-		
-		//compile 'org.springframework.security.extensions:spring-security-saml2-core:1.0.0.RC2'    
+
+        compile 'commons-collections:commons-collections:3.2.1'
+		compile('org.springframework.security.extensions:spring-security-saml2-core:1.0.0.RC2') {
+            excludes 'spring-security-core'
+            excludes 'spring-security-web'
+        }
 	}
 
     plugins {
@@ -93,15 +97,15 @@ grails.project.dependency.resolution = {
         build ":tomcat:7.0.47"
 
         // plugins for the compile step
-        compile ":scaffolding:2.0.1"
-        compile ':cache:1.1.1'
-		compile ":spring-security-core:2.0-RC2"
+        compile "org.grails.plugins:scaffolding:2.1.2"
+        //compile 'org.grails.plugins:cache:1.1.8'
+		compile "org.grails.plugins:spring-security-core:2.0.0"
 
         // plugins needed at runtime but not for compilation
         runtime ":hibernate:3.6.10.6" // or ":hibernate4:4.1.11.6"
         runtime ":database-migration:1.3.8"
-        runtime ":jquery:1.10.2.2"
-        runtime ":resources:1.2.1"
+        runtime "org.grails.plugins:jquery:1.11.1"
+        runtime "org.grails.plugins:resources:1.2.14"
         // Uncomment these (or add new ones) to enable additional resources capabilities
         //runtime ":zipped-resources:1.0.1"
         //runtime ":cached-resources:1.1"
