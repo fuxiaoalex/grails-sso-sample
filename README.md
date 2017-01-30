@@ -1,5 +1,6 @@
 grails-sso-sample
 =================
+Uses Grails 2.4.3
 
 This is a basic grails saml sample implementation...
 
