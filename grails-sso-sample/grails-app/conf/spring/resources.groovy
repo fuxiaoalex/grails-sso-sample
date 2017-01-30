@@ -1,5 +1,3 @@
-import org.codehaus.groovy.grails.compiler.GrailsClassLoader;
-
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.SecurityFilterPosition
 
@@ -167,7 +165,7 @@ beans = {
 		samlUserGroupToRoleMapping = conf.saml.userGroupToRoleMapping
 		userDomainClassName = conf.userLookup.userDomainClassName
 	}
-	
+
 	samlAuthenticationProvider(GrailsSAMLAuthenticationProvider) {
 		userDetails = ref('userDetailsService')
 		hokConsumer = ref('webSSOprofileConsumer')
